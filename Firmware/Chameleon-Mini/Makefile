@@ -13,7 +13,7 @@ SETTINGS    += -DCONFIG_MF_ULTRALIGHT_SUPPORT
 #SETTINGS	  += -DCONFIG_ISO14443A_SNIFF_SUPPORT
 #SETTINGS	  += -DCONFIG_ISO14443A_READER_SUPPORT
 SETTINGS    += -DCONFIG_MF_DETECTION_SUPPORT
-#SETTINGS    += -DCONFIG_MF_DESFIRE_SUPPORT
+SETTINGS    += -DCONFIG_MF_DESFIRE_SUPPORT
 
 #Support magic mode on mifare classic configuration
 #SETTINGS	+= -DSUPPORT_MF_CLASSIC_MAGIC_MODE
@@ -95,9 +95,9 @@ SRC         += $(TARGET).c LUFADescriptors.c System.c Configuration.c Random.c C
 SRC         += Terminal/Terminal.c Terminal/Commands.c Terminal/XModem.c Terminal/CommandLine.c
 SRC         += Codec/Codec.c Codec/ISO14443-2A.c
 SRC         += Application/MifareUltralight.c Application/MifareClassic.c
-#SRC					+= Application/MifareDesfire.c Application/MifareDesfireBE.c
-SRC         += Application/ISO14443-3A.c Application/Crypto1.c
-#SRC					+= Application/CryptoTDEA.S Application/CryptoTDEATests.c 
+SRC					+= Application/MifareDesfire.c Application/MifareDesfireBE.c
+SRC         += Application/ISO14443-3A.c Application/Crypto1.c Application/Crypto1_asm.S
+SRC					+= Application/CryptoTDEA.S Application/CryptoTDEATests.c 
 SRC					+= Application/Detection.c
 SRC         += $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 LUFA_PATH    = src/LUFA/LUFA

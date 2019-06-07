@@ -712,7 +712,8 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
         * Furthermore it delivers an encrypted answer. Decrypt and check it */
         Crypto1Auth(&Buffer[0]);
 
-        Crypto1ByteArray(&Buffer[4], 4);
+        for (uint8_t i=0; i<4; i++)
+            Buffer[i+4] ^= Crypto1Byte();
         //LogEntry(LOG_INFO_APP_AUTHING, &Buffer[4], 4);
 
         if ((Buffer[4] == ReaderResponse[0]) &&
@@ -722,11 +723,10 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
 
             /* Reader is authenticated. Encrypt the precalculated card response
             * and generate the parity bits. */
-            Buffer[0] = CardResponse[0];
-            Buffer[1] = CardResponse[1];
-            Buffer[2] = CardResponse[2];
-            Buffer[3] = CardResponse[3];
-            Crypto1ByteArrayWithParity(Buffer, 4);
+            for (uint8_t i=0; i<sizeof(CardResponse); i++) {
+                Buffer[i] = CardResponse[i] ^ Crypto1Byte();
+                Buffer[ISO14443A_BUFFER_PARITY_OFFSET + i] = ODD_PARITY(CardResponse[i]) ^ Crypto1FilterOutput();
+            }
             //LogEntry(LOG_INFO_APP_AUTHED, Buffer, sizeof(CardResponse));
             State = STATE_AUTHED_IDLE;
 
@@ -752,7 +752,8 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
         }
         /* In this state, all communication is encrypted. Thus we first have to encrypt
          * the incoming data. */
-        Crypto1ByteArray(Buffer, 4);
+        for (uint8_t i=0; i<4; i++)
+            Buffer[i] ^= Crypto1Byte();
 
         if (Buffer[0] == CMD_READ) {
             if (ISO14443ACheckCRCA(Buffer, CMD_READ_FRAME_SIZE)) {
@@ -793,7 +794,11 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
 
                 //LogEntry(LOG_INFO_APP_CMD_READ, Buffer, MEM_BYTES_PER_BLOCK + ISO14443A_CRCA_SIZE);
                 /* Encrypt and calculate parity bits. */
-                Crypto1ByteArrayWithParity(Buffer, ISO14443A_CRCA_SIZE + MEM_BYTES_PER_BLOCK);
+                for (uint8_t i=0; i<(ISO14443A_CRCA_SIZE + MEM_BYTES_PER_BLOCK); i++) {
+                    uint8_t Plain = Buffer[i];
+                    Buffer[i] = Plain ^ Crypto1Byte();
+                    Buffer[ISO14443A_BUFFER_PARITY_OFFSET + i] = ODD_PARITY(Plain) ^ Crypto1FilterOutput();
+                }
 
                 return ( (CMD_READ_RESPONSE_FRAME_SIZE + ISO14443A_CRCA_SIZE )
                         * BITS_PER_BYTE) | ISO14443A_APP_CUSTOM_PARITY;
@@ -913,7 +918,10 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
                 Crypto1PRNG(CardResponse, 32);
 
                 /* Setup crypto1 cipher. */
-                Crypto1SetupNested(Key, Uid, CardNonce, false);
+                Crypto1Setup(Key, Uid, CardNonce);
+
+                for (uint8_t i=0; i<sizeof(CardNonce); i++)
+                    Buffer[i] = CardNonce[i];
 
                 /* Respond with the encrypted random card nonce and expect further authentication
                  * form the reader in the next frame. */
@@ -966,7 +974,8 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
          * activated. */
 
         /* We receive 16 bytes of data to be written and 2 bytes CRCA. Decrypt */
-        Crypto1ByteArray(Buffer, MEM_BYTES_PER_BLOCK + ISO14443A_CRCA_SIZE);
+        for (uint8_t i=0; i<(MEM_BYTES_PER_BLOCK + ISO14443A_CRCA_SIZE); i++)
+            Buffer[i] ^= Crypto1Byte();
 
         if (ISO14443ACheckCRCA(Buffer, MEM_BYTES_PER_BLOCK)) {
             //LogEntry(LOG_INFO_APP_CMD_WRITE, Buffer, MEM_BYTES_PER_BLOCK + ISO14443A_CRCA_SIZE);
@@ -994,7 +1003,8 @@ uint16_t MifareClassicAppProcess(uint8_t* Buffer, uint16_t BitCount)
          * address into the global block buffer and check for integrity. Then
          * add or subtract according to issued command if necessary and store
          * the block back into the global block buffer. */
-        Crypto1ByteArray(Buffer, MEM_VALUE_SIZE + ISO14443A_CRCA_SIZE);
+        for (uint8_t i=0; i<(MEM_VALUE_SIZE  + ISO14443A_CRCA_SIZE); i++)
+            Buffer[i] ^= Crypto1Byte();
 
         if (ISO14443ACheckCRCA(Buffer, MEM_VALUE_SIZE )) {
             MemoryReadBlock(BlockBuffer, (uint16_t) CurrentAddress * MEM_BYTES_PER_BLOCK, MEM_BYTES_PER_BLOCK);
