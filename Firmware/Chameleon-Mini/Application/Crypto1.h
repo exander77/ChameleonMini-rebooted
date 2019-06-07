@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <avr/pgmspace.h>
 
 void Crypto1GetState(uint8_t* pEven, uint8_t* pOdd);
 

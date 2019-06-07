@@ -15,6 +15,9 @@ SETTINGS    += -DCONFIG_MF_ULTRALIGHT_SUPPORT
 SETTINGS    += -DCONFIG_MF_DETECTION_SUPPORT
 #SETTINGS    += -DCONFIG_MF_DESFIRE_SUPPORT
 
+#Choose FAST, but more space
+#SETTINGS    += -DCONFIG_MF_CLASSIC_FAST
+
 #Support magic mode on mifare classic configuration
 #SETTINGS	+= -DSUPPORT_MF_CLASSIC_MAGIC_MODE
 
@@ -97,6 +100,7 @@ SRC         += Codec/Codec.c Codec/ISO14443-2A.c
 SRC         += Application/MifareUltralight.c Application/MifareClassic.c
 #SRC					+= Application/MifareDesfire.c Application/MifareDesfireBE.c
 SRC         += Application/ISO14443-3A.c Application/Crypto1.c
+SRC         += Application/Crypto1_asm.S
 #SRC					+= Application/CryptoTDEA.S Application/CryptoTDEATests.c 
 SRC					+= Application/Detection.c
 SRC         += $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
