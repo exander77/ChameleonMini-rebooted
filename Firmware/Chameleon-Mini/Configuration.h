@@ -44,6 +44,12 @@ CONFIG_MF_DETECTION,
 #ifdef CONFIG_ISO15693_GEN_SUPPORT
     CONFIG_ISO15693_GEN,
 #endif
+#ifdef CONFIG_MF_DESFIRE_SUPPORT
+    CONFIG_MF_DESFIRE,
+    CONFIG_MF_DESFIRE_EV1_2K,
+    CONFIG_MF_DESFIRE_EV1_4K,
+    CONFIG_MF_DESFIRE_EV1_8K,
+#endif
     /* This HAS to be the last element */
     CONFIG_COUNT
 } ConfigurationEnum;
@@ -131,6 +137,8 @@ typedef struct {
     /**
      * Defines how many space the configuration needs. For emulating configurations this is the memory space of
      * the emulated card.
+     *
+     * \note For reader or sniff configurations this is set to zero.
      */
     uint16_t MemorySize;
     /**

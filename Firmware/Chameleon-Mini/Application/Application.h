@@ -15,6 +15,7 @@
 #include "MifareClassic.h"
 #include "MifareUltralight.h"
 #include "Detection.h"
+#include "MifareDesfire.h"
 
 /* Function wrappers */
 INLINE void ApplicationInit(void) {

@@ -32,7 +32,7 @@ CC_FLAGS           ?=
 OBJDIR             ?= obj
 OBJECT_FILES       ?=
 DEBUG_FORMAT       ?= dwarf-2
-DEBUG_LEVEL        ?= 2
+DEBUG_LEVEL        ?= 0
 LINKER_RELAXATIONS ?= Y
 
 # Sanity check user supplied values

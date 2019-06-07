@@ -222,6 +222,14 @@ void MemoryWriteBlock(const void* Buffer, uint16_t Address, uint16_t ByteCount) 
 	FlashWrite(Buffer, FlashAddress, ByteCount);
 }
 
+void MemorySetBlock(uint8_t Value, uint16_t Address, uint16_t ByteCount)
+{
+  if (ByteCount == 0)
+    return;
+  //TODO
+  //FRAMSet(Value, Address, ByteCount);
+}
+
 void MemoryClear(void) {
 	uint16_t PageAddress;
 	uint16_t PageCount;

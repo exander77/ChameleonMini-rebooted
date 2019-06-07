@@ -59,6 +59,8 @@ LUFA_SRC_USBCLASS_DEVICE := $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/AudioClas
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/PrinterClassDevice.c      \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/RNDISClassDevice.c        \
 
+LUFA_SRC_USBCLASS_DEVICE := $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/CDCClassDevice.c
+
 LUFA_SRC_USBCLASS_HOST   := $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/AndroidAccessoryClassHost.c \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/AudioClassHost.c            \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/CDCClassHost.c              \
@@ -68,6 +70,8 @@ LUFA_SRC_USBCLASS_HOST   := $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/AndroidAcce
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/PrinterClassHost.c          \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/RNDISClassHost.c            \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Host/StillImageClassHost.c
+
+LUFA_SRC_USBCLASS_HOST   :=
 
 LUFA_SRC_USB             := $(sort $(LUFA_SRC_USB_COMMON) $(LUFA_SRC_USB_HOST) $(LUFA_SRC_USB_DEVICE))
 

@@ -36,16 +36,46 @@
 
 #define ISO14443A_ATQA_FRAME_SIZE   (2 * 8) /* Bit */
 #define ISO14443A_SAK_FRAME_SIZE    (3 * 8) /* Bit */
+#define ISO14443A_HLTA_FRAME_SIZE   (2 * 8) /* Bit */
 
 #define ISO14443A_UID0_RANDOM       0x08
 #define ISO14443A_UID0_CT           0x88
 
 #define ISO14443A_CRCA_SIZE         2
+#define ISO14443A_CRCA_INIT         0x6363
 
 #define ISO14443A_CALC_BCC(ByteBuffer) \
     ( ByteBuffer[0] ^ ByteBuffer[1] ^ ByteBuffer[2] ^ ByteBuffer[3] )
 
+/** Update a CRCA checksum according to the ISO 14443 standard.
+ *
+ * \param Buffer Pointer to the start of the buffer.
+ * \param ByteCount Count of bytes to process.
+ * \param Checksum The CRCA checksum to be updated.
+ * \return The updated CRCA checksum.
+ */
+uint16_t ISO14443AUpdateCRCA(const void* Buffer, uint16_t ByteCount, uint16_t Checksum);
+/** Compute a CRCA checksum according to the ISO 14443 standard.
+ *
+ * \param Buffer Pointer to the start of the buffer.
+ * \param ByteCount Count of bytes to process.
+ * \return The CRCA checksum.
+ */
+uint16_t ISO14443AComputeCRCA(const void* Buffer, uint16_t ByteCount);
+/** Compute and append a CRCA checksum according to the ISO 14443 standard.
+ * The checksum will be appended right after the input data.
+ *
+ * \param Buffer Pointer to the start of the buffer.
+ * \param ByteCount Count of bytes to process, not including the CRCA.
+ */
 void ISO14443AAppendCRCA(void* Buffer, uint16_t ByteCount);
+/** Verify the CRCA checksum according to the ISO 14443 standard.
+ * The checksum is expected to be right after the ByteCount bytes in input data.
+ *
+ * \param Buffer Pointer to the start of the buffer.
+ * \param ByteCount Count of bytes to process, not including the CRCA.
+ * \return Whether the checksum matches.
+ */
 bool ISO14443ACheckCRCA(const void* Buffer, uint16_t ByteCount);
 
 INLINE bool ISO14443ASelect(void* Buffer, uint16_t* BitCount, uint8_t* UidCL, uint8_t SAKValue);
